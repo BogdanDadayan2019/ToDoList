@@ -18,11 +18,11 @@ public class FileManager {
                 String[] taskParts = line.split(":", 2);
                 int id = Integer.parseInt(taskParts[0]);
                 String text = taskParts[1];
-                ToDo.tasks.add(new Task(id, text));
-                ToDo.idTaskEncounter = Math.max(ToDo.idTaskEncounter, id + 1); 
+                TaskManager.tasks.add(new Task(id, text));
+                TaskManager.idTaskEncounter = Math.max(TaskManager.idTaskEncounter, id + 1); 
             }
         } catch (IOException e) {
-        	ToDo.displayError("Fehler beim Laden der Aufgaben aus der Datei: " + e.getMessage());
+        	TaskManager.displayError("Fehler beim Laden der Aufgaben aus der Datei: " + e.getMessage());
         }
     }
 
@@ -30,12 +30,12 @@ public class FileManager {
     public static void saveTasksToFile() {
         System.out.println("--- Speichern der Aufgaben in die Datei...");
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            for (Task task : ToDo.tasks) {
+            for (Task task : TaskManager.tasks) {
                 writer.write(task.getId() + ":" + task.getText());
                 writer.newLine();
             }
         } catch (IOException e) {
-        	ToDo.displayError("Fehler beim Speichern der Aufgaben in die Datei: " + e.getMessage());
+        	TaskManager.displayError("Fehler beim Speichern der Aufgaben in die Datei: " + e.getMessage());
         }
     }
 
