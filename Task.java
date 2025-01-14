@@ -1,6 +1,3 @@
-package toDo;
-
-
 public class Task{
 
     private int id;

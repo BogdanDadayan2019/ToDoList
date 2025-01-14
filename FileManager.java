@@ -1,5 +1,3 @@
-package toDo;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -8,7 +6,7 @@ import java.io.IOException;
 
 public class FileManager {
 	
-	static String filePath = "tasks.txt";
+	static String filePath = "ToDoList\\tasks.txt";
 	// Methode zum Laden der Aufgaben aus der Datei
     public static void loadTasksFromFile() {
         System.out.println("--- Versuche, Aufgaben aus der Datei zu laden...");
@@ -22,6 +20,7 @@ public class FileManager {
                 TaskManager.idTaskEncounter = Math.max(TaskManager.idTaskEncounter, id + 1); 
             }
         } catch (IOException e) {
+            
         	TaskManager.displayError("Fehler beim Laden der Aufgaben aus der Datei: " + e.getMessage());
         }
     }
