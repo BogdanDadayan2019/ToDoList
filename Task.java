@@ -2,11 +2,12 @@ public class Task{
 
     private int id;
     private String text;
+    private String priority;
 
-
-    public Task(int id, String text) {
+    public Task(int id, String text, String priority) {
         this.id = id;
         this.text = text;
+        this.priority = priority;
     }
     
     public void DisplayTask(){
@@ -27,6 +28,14 @@ public class Task{
 
     public String getText() {
         return text;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void  setPriority(String priority) {
+        this.priority = priority;
     }
     
 }
