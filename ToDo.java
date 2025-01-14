@@ -8,26 +8,27 @@ public class ToDo {
 
     private static Scanner scanner = new Scanner(System.in);
     static ArrayList<Task> tasks = new ArrayList<>();
-    static String filePath = "tasks.txt";
+    
     static int idTaskEncounter = 1;
     static String exitStr = "0"; 
 
     
     public static void main(String[] args) {     
-        System.out.println("--- Добро пожаловать в ToDoList ");
-        loadTasksFromFile();  // Загружаем задачи из файла
-        CommandsMenu();       // Показываем меню команд
+        System.out.println("--- Willkommen bei ToDoList ");
+        FileManager.loadTasksFromFile();  // Laden der Aufgaben aus der Datei
+        CommandsMenu();       // Anzeige des Befehlsmenüs
     }
+    
 
-    // Метод для вывода меню команд
+    // Methode zur Anzeige des Befehlsmenüs
     public static void CommandsMenu(){
         while (true) {        
-            System.out.println("\n\n--- Команды   \n1: Добавить // 2: Показать // 3: Изменить // 4: Удалить // 0: Выйти");
+            System.out.println("\n\n--- Befehle   \n1: Hinzufügen // 2: Anzeigen // 3: Ändern // 4: Löschen // 0: Beenden");
             String inputCommandNumber = scanner.nextLine();
 
             if (!inputCommandNumber.trim().isEmpty()) {
                 switch (inputCommandNumber) {
-                    case "21":
+                    case "1":
                         AddTask();
                         break;
                     case "2":
@@ -43,25 +44,25 @@ public class ToDo {
                         CloseApp();
                         break;              
                     default:
-                    	displayError("Ошибка! Некорректная команда. Попробуйте еще раз.\n");
+                    	displayError("Fehler! Ungültiger Befehl. Bitte versuchen Sie es erneut.\n");
                         break;
                 }             
             } else {
-            	displayError("Ошибка! Ввод не может быть пустым. Пожалуйста, введите корректную команду.\n");
+            	displayError("Fehler! Die Eingabe darf nicht leer sein. Bitte geben Sie einen gültigen Befehl ein.\n");
             }
         }       
     }
 
-    // Метод для закрытия программы
+    // Methode zum Schließen des Programms
     public static void CloseApp(){
-        System.out.println("--- Программа закрывается. До свидания!\n");
+        System.out.println("--- Das Programm wird geschlossen. Auf Wiedersehen!\n");
         System.exit(0);
     }
     
-    // Метод для добавления задачи
+    // Methode zum Hinzufügen einer Aufgabe
     public static void AddTask(){
         while (true) {
-            System.out.println("--- Введите текст новой задачи. Для выхода введите: " + exitStr); 
+            System.out.println("--- Geben Sie den Text der neuen Aufgabe ein. Zum Beenden geben Sie: " + exitStr); 
             String taskText = scanner.nextLine();
 
             if (isExitCommand(taskText)) {
@@ -71,20 +72,22 @@ public class ToDo {
             if (isValidTaskText(taskText)) {
                 Task task = new Task(idTaskEncounter++, taskText);
                 tasks.add(task);
-                saveTasksToFile();
-                System.out.println("--- Задача добавлена успешно.\n");
+                FileManager.saveTasksToFile();
+                System.out.println("--- Aufgabe wurde erfolgreich hinzugefügt.\n");
                 break;
             } else {
-            	displayError("Ошибка! Ввод не может быть пустым. Попробуйте снова.\n");
+            	displayError("Fehler! Die Eingabe darf nicht leer sein. Bitte versuchen Sie es erneut.\n");
             }
         }
     }
+    
+ 
 
-    // Метод для изменения задачи
+    // Methode zum Ändern einer Aufgabe
     public static void ChangeTask(){
         while (true) {
             ShowListOfTasks();
-            System.out.println("--- Выберите задачу по ID для изменения её текста. Для выхода введите: " + exitStr);
+            System.out.println("--- Wählen Sie die Aufgabe anhand der ID aus, um den Text zu ändern. Zum Beenden geben Sie: " + exitStr);
 
             String inputIdTask = scanner.nextLine();
             if (isExitCommand(inputIdTask)) {
@@ -94,31 +97,31 @@ public class ToDo {
             if (isValidId(inputIdTask)) {
                 Task selectedTask = findTaskById(inputIdTask);
                 if (selectedTask != null) {
-                    if (confirmAction("изменить")) {
+                    if (confirmAction("ändern")) {
                         String newTaskText = getNewTaskText();
                         if (isValidTaskText(newTaskText)) {
                             selectedTask.setText(newTaskText);
-                            saveTasksToFile();
-                            System.out.println("--- Задача успешно изменена.\n");
+                            FileManager.saveTasksToFile();
+                            System.out.println("--- Aufgabe wurde erfolgreich geändert.\n");
                             return;
                         } else {
-                        	displayError("Ошибка! Ввод не может быть пустым.\n");
+                        	displayError("Fehler! Die Eingabe darf nicht leer sein.\n");
                         }
                     }
                 } else {
-                	displayError("Задача с таким ID не найдена.\n");
+                	displayError("Aufgabe mit dieser ID wurde nicht gefunden.\n");
                 }
             } else {
-            	displayError("Ошибка! ID должен содержать только цифры.\n");
+            	displayError("Fehler! Die ID muss nur Zahlen enthalten.\n");
             }
         }
     }
 
-    // Метод для удаления задачи
+    // Methode zum Löschen einer Aufgabe
     public static void DeleteTask(){
         while (true) {
             ShowListOfTasks();
-            System.out.println("--- Выберите задачу по ID для удаления. Для выхода введите: " + exitStr);
+            System.out.println("--- Wählen Sie die Aufgabe anhand der ID aus, um sie zu löschen. Zum Beenden geben Sie: " + exitStr);
 
             String _inputIdTask = scanner.nextLine();
             if (isExitCommand(_inputIdTask)) {
@@ -128,75 +131,45 @@ public class ToDo {
             if (isValidId(_inputIdTask)) {
                 Task selectedTask = findTaskById(_inputIdTask);
                 if (selectedTask != null) {
-                    if (confirmAction("удалить")) {
+                    if (confirmAction("löschen")) {
                         tasks.remove(selectedTask);
-                        saveTasksToFile();
-                        System.out.println("--- Задача успешно удалена.\n");
+                        FileManager.saveTasksToFile();
+                        System.out.println("--- Aufgabe wurde erfolgreich gelöscht.\n");
                         return;
                     }
                 } else {
-                	displayError("Задача с таким ID не найдена.\n");
+                	displayError("Aufgabe mit dieser ID wurde nicht gefunden.\n");
                 }
             } else {
-            	displayError("Ошибка! ID должен содержать только цифры.\n");
+            	displayError("Fehler! Die ID muss nur Zahlen enthalten.\n");
             }
         }   
     }
 
-    // Метод для отображения списка задач
+    // Methode zur Anzeige der Aufgabenliste
     public static void ShowListOfTasks(){
-        System.out.println("--- Список ваших задач: ");
+        System.out.println("--- Ihre Aufgabenliste: ");
         for (Task _task : tasks) {
             _task.DisplayTask();
         }
     }
 
-    // Метод для загрузки задач из файла
-    public static void loadTasksFromFile() {
-        System.out.println("--- Попытка загрузить задачи из файла...");
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] taskParts = line.split(":", 2);
-                int id = Integer.parseInt(taskParts[0]);
-                String text = taskParts[1];
-                tasks.add(new Task(id, text));
-                idTaskEncounter = Math.max(idTaskEncounter, id + 1); 
-            }
-        } catch (IOException e) {
-        	displayError("Ошибка при загрузке задач из файла: " + e.getMessage());
-        }
-    }
-
-    // Метод для сохранения задач в файл
-    public static void saveTasksToFile() {
-        System.out.println("--- Сохранение задач в файл...");
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            for (Task task : tasks) {
-                writer.write(task.getId() + ":" + task.getText());
-                writer.newLine();
-            }
-        } catch (IOException e) {
-        	displayError("Ошибка при сохранении задач в файл: " + e.getMessage());
-        }
-    }
-
-    // Метод для проверки на выходную команду
+    // Methode zur Überprüfung auf den Exit-Befehl
     public static boolean isExitCommand(String input) {
         return input.equals(exitStr);
     }
 
-    // Метод для проверки текста задачи на пустоту
+    // Methode zur Überprüfung, ob der Text der Aufgabe gültig ist
     public static boolean isValidTaskText(String text) {
         return !text.trim().isEmpty();
     }
 
-    // Метод для проверки ID на корректность
+    // Methode zur Überprüfung der ID auf Gültigkeit
     public static boolean isValidId(String id) {
         return id.matches("\\d+");
     }
 
-    // Метод для поиска задачи по ID
+    // Methode zum Finden einer Aufgabe anhand der ID
     public static Task findTaskById(String id) {
         for (Task task : tasks) {
             if (task.getId() == Integer.parseInt(id)) {
@@ -206,29 +179,30 @@ public class ToDo {
         return null;
     }
 
-    // Метод для подтверждения действия с проверкой на корректный ввод
+    // Methode zur Bestätigung der Aktion mit einer Überprüfung der Eingabe
     public static boolean confirmAction(String action) {
         while (true) {
-            System.out.println("--- Вы уверены, что хотите " + action + " эту задачу? Для подтверждения введите '1', для отмены введите '2'.");
+            System.out.println("--- Sind Sie sicher, dass Sie diese Aufgabe " + action + " möchten? Geben Sie '1' zur Bestätigung oder '2' zum Abbrechen ein.");
             String confirmation = scanner.nextLine();
 
-            // Проверка на корректный ввод
+            // Überprüfung auf gültige Eingabe
             if (confirmation.equals("1")) {
-                return true; // Подтверждено
+                return true; // Bestätigt
             } else if (confirmation.equals("2")) {
-                return false; // Отменено
+                return false; // Abgebrochen
             } else {
-            	displayError("Ошибка! Пожалуйста, введите '1' для подтверждения или '2' для отмены.");
+            	displayError("Fehler! Bitte geben Sie '1' zur Bestätigung oder '2' zum Abbrechen ein.");
             }
         }
     }
 
-    // Метод для получения нового текста задачи
+    // Methode zur Eingabe des neuen Texts einer Aufgabe
     public static String getNewTaskText() {
-        System.out.println("--- Введите новый текст задачи: ");
+        System.out.println("--- Geben Sie den neuen Text der Aufgabe ein: ");
         return scanner.nextLine();
     }
     
+    // Methode zur Display Errors
     public static void displayError(String text) {
     	System.out.println("--- " + text);
     }
